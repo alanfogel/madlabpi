@@ -1,0 +1,5 @@
+sudo nmtui
+
+new_aspen_2022_EXT2G
+
+Aspen2022

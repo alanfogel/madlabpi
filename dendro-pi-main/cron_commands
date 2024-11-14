@@ -1,0 +1,7 @@
+# Take a picture every hour (6am to 12am)
+0 9 * * * python /home/madlab/dendro-pi-main/main/dendro_pictures.py
+0 12 * * * python /home/madlab/dendro-pi-main/main/dendro_pictures.py
+0 15 * * * python /home/madlab/dendro-pi-main/main/dendro_pictures.py
+0 18 * * * python /home/madlab/dendro-pi-main/main/dendro_pictures.py
+# Upload picture every day (12am)
+0 0 * * * sh /home/madlab/dendro-pi-main/upload-to-dropbox.sh
