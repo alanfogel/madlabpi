@@ -29,8 +29,8 @@ adc_values_2 = []
 adc_values_3 = []
 
 # Function to read ADC value, apply calibration, and convert to voltage and microns
-def read_adc():
-    adc_value = 30000 # Simulate an ADC value for testing
+def read_adc(adc_channel):
+    adc_value = adc_channel.value # Simulate an ADC value for testing
     # Apply calibration if ADC value is below threshold, you need to calibrate your ADC by measuring the minimum dendrometer value
     if adc_value < 275:
         adc_value = 275  # Ensure the ADC value does not go below a certain minimum
@@ -67,7 +67,7 @@ def save_mean_microns(mean_microns, channel):
 
 # Main loop to continuously read sensors and process data
 while True:
-    start_time = time.monotonic()  # Get the start time
+    # start_time = time.monotonic()  # Get the start time
     
     # Get mean ADC values for each channel
     filtered_value_0, mean_voltage_0 = mean_adc(adc_channel_0, adc_values_0)
@@ -88,7 +88,7 @@ while True:
     save_mean_microns(filtered_value_3, 3)
 
        
-    end_time = time.monotonic()  # Get the end time
+    # end_time = time.monotonic()  # Get the end time
     # Calculate and print the elapsed time for each loop iteration
-    elapsed_time = end_time - start_time
-    print(f"Elapsed time: {elapsed_time} seconds")
+    # elapsed_time = end_time - start_time
+    # print(f"Elapsed time: {elapsed_time} seconds")
