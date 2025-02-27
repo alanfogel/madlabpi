@@ -9,43 +9,55 @@ while IFS= read -r line; do
   rm "$FILENAME"
 done < already_uploaded.txt
 
-
 # --- Upload dendrometer data ---
-cd ~/Dropbox-Uploader
+# Directories
+LOG_DIR=~/dendro_logger
+BACKUP_DIR=~/dendro_logger/DD_backup
+DROPBOX_UPLOADER=~/Dropbox-Uploader/dropbox_uploader.sh
 
-# Find files that haven't been modified in the last 60 minutes
-find ~/dendro_logger/* -mmin +60 > files_to_upload.txt
+# Ensure backup directory exists
+mkdir -p "$BACKUP_DIR"
 
-while IFS= read -r file; do
-  # Check if the file still hasn't been modified in the last 60 minutes
-  if [ $(find "$file" -mmin +60) ]; then
-    ./dropbox_uploader.sh upload "$file" /
-    # If the file was uploaded successfully, move it to the backup directory
-    mkdir -p ~/dendro_logger/DD_backup
-    mv "$file" ~/dendro_logger/DD_backup/
-  fi
-done < files_to_upload.txt
+# Get today's date in YYYY-MM-DD format
+TODAY=$(date +"%Y-%m-%d")
+
+# Change to log directory
+cd "$LOG_DIR"
+
+# Loop through all channel files EXCEPT today's file
+for file in channel_*.txt; do
+    if [[ -f "$file" ]]; then
+        # Extract the date from the filename
+        FILE_DATE=$(echo "$file" | grep -oE "[0-9]{4}-[0-9]{2}-[0-9]{2}")
+
+        # Skip today's file (still being written to)
+        if [[ "$FILE_DATE" == "$TODAY" ]]; then
+            continue
+        fi
+
+        # Attempt to upload the file
+        if "$DROPBOX_UPLOADER" upload "$file" /; then
+            # If upload is successful, move to backup
+            mv "$file" "$BACKUP_DIR/"
+        else
+            # If upload fails, print an error message (file stays in LOG_DIR for retrying)
+            echo "Upload failed for $file"
+        fi
+    fi
+done
 
 
-# --- New logic for dendrometer data ---
-# DATA_DIR=~/dendro_logger
-# UPLOAD_DIR="/DD_Dorval-#"  # Dropbox directory - CHANGE TO "/DD_Dorval-#"
-# DATE=$(date +"%Y-%m-%d")        # Daily timestamp
 
-# # Process each channel
-# for CHANNEL in 0 1 2 3; do  
-#   INPUT_FILE="${DATA_DIR}/micron_values_channel_${CHANNEL}.txt"
-#   DAILY_FILE="${DATA_DIR}/micron_values_channel_${CHANNEL}_${DATE}.txt"
-  
-#   # Create a daily copy (if data exists)
-#   if [ -s "$INPUT_FILE" ]; then
-#     cp "$INPUT_FILE" "$DAILY_FILE"
-#     ./dropbox_uploader.sh upload "$DAILY_FILE" "$UPLOAD_DIR/"
-#     # rm "$DAILY_FILE"  # Remove local daily copy after upload
-#     # Instead of removing the daily copy we move it to ~/dendro_logger/DD_backup
-#     mkdir -p ~/dendro_logger/DD_backup
-#     mv "$DAILY_FILE" ~/dendro_logger/DD_backup/"$(basename "$DAILY_FILE")"
-#     # and remove the input file to start fresh
-#     rm "$INPUT_FILE"
-#   fi
-# done
+
+# --- OLD Upload dendrometer data ---
+# cd ~/Dropbox-Uploader
+
+# # Find files that haven't been modified in the last 60 minutes
+# find ~/dendro_logger/* -mmin +60 > files_to_upload.txt
+
+# while IFS= read -r file; do
+#   ./dropbox_uploader.sh upload "$file" /
+#   # If the file was uploaded successfully, move it to the backup directory
+#   mkdir -p ~/dendro_logger/DD_backup
+#   mv "$file" ~/dendro_logger/DD_backup/
+# done < files_to_upload.txt
