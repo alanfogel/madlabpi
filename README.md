@@ -5,4 +5,4 @@ This repository contains scripts, configurations, and documentation for Raspberr
 ## Contents  
 - **Dendrochronology & Environmental Monitoring**: Scripts for collecting and processing data.  
 - **Raspberry Pi Setup**: Configuration files, scripts, and network settings.  
-- **Logger Data**: Data collected from field deployments.  
+- **Logger Data**: Scripts for collecting data from field deployments.  
