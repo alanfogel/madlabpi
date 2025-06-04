@@ -36,7 +36,7 @@ for file in channel_*.txt; do
         fi
 
         # Attempt to upload the file
-        if "$DROPBOX_UPLOADER" upload "$file" /; then
+        if "$DROPBOX_UPLOADER" upload "$file" /DD_Dorval-7/; then # CHANGE FOLDER NAME HERE
             # If upload is successful, move to backup
             mv "$file" "$BACKUP_DIR/"
         else
