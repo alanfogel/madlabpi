@@ -58,14 +58,7 @@ def read_and_log(samples=10, delay=0.1):
         with open(file_path, "a") as f:
             f.write(f"{timestamp}, {microns:.2f}\n")
         print(f"Ch{chan_num}: {microns:.2f} µm, {avg_voltage:.4f} V (avg of {len(readings)} samples)")
-        # print(f"Ch{chan_num}: {microns:.2f} µm (avg of {len(readings)} samples)")
+
 
 if __name__ == "__main__":
     read_and_log()
-    ## For testing:
-    # try:
-    #     while True:
-    #         read_and_log()
-    #         time.sleep(0.1)  # Wait 0.1 seconds between runs (adjust as needed)
-    # except KeyboardInterrupt:
-    #     print("Logging stopped by user.")

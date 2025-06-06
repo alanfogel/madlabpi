@@ -82,7 +82,8 @@ def save_channel_data(chan_num, mean_microns):
     if mean_microns > NOISE_FLOOR:
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         datestamp = datetime.date.today().strftime("%Y-%m-%d")
-        with open(f'channel_{chan_num}_{datestamp}.txt', 'a') as f:
+        file_path = f'/home/madlab/dendro_logger/channel_{chan_num}_{datestamp}.txt'
+        with open(file_path, 'a') as f:
             f.write(f"{timestamp}, {mean_microns}\n")
 
 def main():
